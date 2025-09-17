@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Login Test</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <h1>Google Login Test</h1>
+
+  <!-- Tempat tombol login akan muncul -->
+  <div id="g_id_signin"></div>
+
+  <script>
+    // Ganti dengan Client ID kamu
+    const CLIENT_ID = "748880456839-gdbc7shesgba3lce2tpemjoihum3f2uc.apps.googleusercontent.com";
+
+    window.onload = function () {
+      console.log("✅ Window loaded, init Google Identity Services...");
+
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleCredentialResponse
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById("g_id_signin"),
+        { theme: "outline", size: "large" }
+      );
+
+      google.accounts.id.prompt(); // optional
+    };
+
+    function handleCredentialResponse(response) {
+      console.log("🔑 Login response:", response);
+      console.log("✅ Token JWT diterima:", response.credential);
+
+      // Decode JWT untuk lihat info user
+      const payload = JSON.parse(atob(response.credential.split('.')[1]));
+      console.log("👤 User info:", payload);
+
+      alert("Hello, " + payload.name + " (" + payload.email + ")");
+    }
+  </script>
+</body>
+</html>
